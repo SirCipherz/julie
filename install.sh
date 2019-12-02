@@ -3,7 +3,7 @@
 # Root Check
 
 if [[ $EUID -ne 0 ]]; then
-    echo "You must be a root user" 2>&1
+    echo "You must be a root user for launching this script" 2>&1
     exit 1
 else
     echo "Welcome to the Julie's installation wizard"
