@@ -27,7 +27,7 @@ OPTIONS:
             then
                 tmpdir="$1"
             else
-                >&2 echo "ERROR: Please specify a tmpdir"
+                >&2 echo "ERROR: Please specify a temp dir"
                 exit 1
             fi
             shift
