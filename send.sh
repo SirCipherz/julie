@@ -110,7 +110,8 @@ echo "Key: $key"
 # Copy the key into the clipboard
 if [ -n "$DISPLAY" ]
 then
-    echo "$key" | xclip -sel clip
+    echo -n "$key" | xclip -sel clip
+    echo -n ""
     result=$?
     if [ $result -eq 0 ]
     then
