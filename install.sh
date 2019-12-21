@@ -12,6 +12,20 @@ else
     echo "(N)ano | (V)im | (C)ustom julie's GUI"
     read -p "> " editor
 
+    if [[ $editor == 'N' ]] || [[  $editor == 'n' ]]; then
+        editor='nano'
+        echo "nano will be used as your editor for julie"
+    elif [[ $editor == 'V' ]] || [[ $editor == 'v' ]]; then
+        editor='vim'
+        echo "vim will be used as your editor for julie"
+    elif [[ $editor == 'C' ]] || [[ $editor == 'c' ]]; then
+        editor='zenity'
+        echo "zenity will be used as your editor for julie"
+    else
+        echo "You haven't choose a valid editor, the custom one will be used"
+        editor='zenity'
+    fi
+
     # Copy the send and the receive script into /usr/bin/
     echo "Copying the files ..."
 
