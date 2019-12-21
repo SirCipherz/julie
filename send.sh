@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Set the temp directory
 tmpdir="/tmp"
 if [ -n "$TMPDIR" ]
