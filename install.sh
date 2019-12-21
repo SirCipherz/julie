@@ -8,6 +8,9 @@ if [[ $EUID -ne 0 ]]; then
 else
     echo "Welcome to the Julie's installation wizard"
     echo ""
+    echo "Which editor would you like to use ?"
+    echo "(N)ano | (V)im | (C)ustom julie's GUI"
+    read -p "> " editor
 
     # Copy the send and the receive script into /usr/bin/
     echo "Copying the files ..."
