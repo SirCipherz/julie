@@ -26,11 +26,15 @@ else
         editor='zenity'
     fi
 
+    python3 replacer.py $editor # Changing the editor into the send.sh file
+
     # Copy the send and the receive script into /usr/bin/
     echo "Copying the files ..."
 
-    cp ./send.sh /usr/bin/julie-s
+    cp /tmp/tmp-julie-send.sh /usr/bin/julie-s
     cp ./receive.sh /usr/bin/julie-r
+
+    rm /tmp/tmp-julie-send.sh # Cleaning
 
     echo "Giving the rights to all users ..."
     chmod a+rx /usr/bin/julie-* # Giving the rights

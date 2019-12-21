@@ -7,7 +7,7 @@ then
 fi
 
 # Set the editor
-editor="vim"
+editor='vim'
 
 # Set the recipients
 recipients=()
