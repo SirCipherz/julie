@@ -13,11 +13,11 @@ _source=(
 arch=('x86_64')
 
 depends=(
-   zenity vim nano gpg curl
+   zenity vim nano gnupg curl
 )
 
 package() {
-    cd $srcdir/
+    cd $srcdir/..
     bash install.sh
 }
 
