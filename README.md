@@ -27,3 +27,14 @@ git clone https://framagit.org/SirCipherz/julie.git
 cd julie
 sudo ./install.sh
 ```
+
+## How much secure is Julie ?
+
+Julie use gpg which is a very strong encryption software in addition the encrypted messages are sent on file.io in base64 with a 1 day download limit. You can use Julie without any fear, security is very important to her devlopper.
+
+## How to contribute ?
+
+- You can make forks of Julie to improve her code
+- You can submit issues if you want me to fix it
+- You can send feedbacks and suggestions too
+- Finally you can talk to your friends about Julie
