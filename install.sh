@@ -9,7 +9,7 @@ else
     echo "Welcome to the Julie's installation wizard"
     echo ""
     echo "Which editor would you like to use ?"
-    echo "(N)ano | (V)im | (C)ustom julie's GUI"
+    echo "(N)ano | (V)im | (C)ustom julie's GUI | (R)ead [crappy cli]"
     read -p "> " editor
 
     if [[ $editor == 'N' ]] || [[  $editor == 'n' ]]; then
@@ -21,6 +21,9 @@ else
     elif [[ $editor == 'C' ]] || [[ $editor == 'c' ]]; then
         editor='zenity'
         echo "zenity will be used as your editor for julie"
+    elif [[ $editor == 'R' ]] || [[ $editor == 'r' ]]; then
+        editor='read'
+        echo "read will be used as your editor for julie"
     else
         echo "You haven't choose a valid editor, the custom one will be used"
         editor='zenity'
