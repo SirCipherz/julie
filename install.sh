@@ -10,7 +10,7 @@ else
     echo ""
     echo "Which editor would you like to use ?"
     echo "(N)ano | (V)im | (C)ustom julie's GUI | (R)ead [crappy cli]"
-    read -p "> " editor
+    read -p "$ " editor
 
     if [[ $editor == 'N' ]] || [[  $editor == 'n' ]]; then
         editor='nano'
