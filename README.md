@@ -21,6 +21,10 @@ julie-r [key]
 
 ## How to install it ?
 
+### Arch
+If you are on arch it's simple : install the package julie with your favorite AUR helper
+
+### Other
 Just do
 ```bash
 git clone https://framagit.org/SirCipherz/julie.git
@@ -31,15 +35,17 @@ sudo ./install.sh
 ## Options
 
 ### Send
+```
 -e : Override the editor
 -r : Recipient (can be ID, Name, email)
 -h : shows help
-
+```
 ### Receive
+```
 -t : Change the tmp dir
 -e : Override the editor
 -h : shows help
-
+```
 ## How much secure is Julie ?
 
 Julie use gpg which is a very strong encryption software in addition the encrypted messages are sent on file.io in base64 with a 1 day download limit. You can use Julie without any fear, security is very important to her devlopper.
