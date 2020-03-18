@@ -81,7 +81,7 @@ then
         exit 1
     fi
     # Upload
-    key=$(curl --silent --data-urlencode "text=$(cat $tmpdir/$image.gpg.b64)" https://file.io/?expires=2d | jq -r ".key")
+    key=$(curl --silent -F "file=@$tmpdir/$image.gpg.b64" https://file.io/?expires=2d | jq -r ".key")
     if [ $? -eq 127 ]
     then
         >&2 echo "ERROR: jq not in your PATH. Please install it"
