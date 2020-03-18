@@ -36,15 +36,17 @@ sudo ./install.sh
 
 ### Send
 ```
--e : Override the editor
--r : Recipient (can be ID, Name, email)
--h : shows help
+-e        : Override the editor
+-r        : Recipient (can be ID, Name, email)
+-h        : Shows help
+-i <path> : Send an image
 ```
 ### Receive
 ```
--t : Change the tmp dir
--e : Override the editor
--h : shows help
+-t       : Change the tmp dir
+-e       : Override the editor
+-h       : Shows help
+-i <key> : Receive an image
 ```
 ## How much secure is Julie ?
 
