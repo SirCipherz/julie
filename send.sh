@@ -48,6 +48,13 @@ OPTIONS:
             fi
             shift
             ;;
+        -i|--image)
+            shift
+            mode="img"
+            img_path="$1"
+            image=`basename $1`
+            shift
+            ;;
         *)
             message="$1"
             shift
@@ -60,6 +67,55 @@ if [ ${#recipients[@]} -eq 0 ]
 then
     >&2 echo "ERROR: Please specify at least 1 recipient (see --help)"
     exit 1
+fi
+
+# Image mode
+if [ $mode == 'img' ]
+then
+    # Encrypt
+    cat "$img_path" | gpg -se "${recipients[*]}" > "$tmpdir/$image.gpg"
+    base64 "$tmpdir/$image.gpg" > "$tmpdir/$image.gpg.b64"
+    if [ $? -eq 127 ]
+    then
+        >&2 echo "ERROR: base64 not in your PATH. Please install it"
+        exit 1
+    fi
+    # Upload
+    key=$(curl --silent --data-urlencode "text=$(cat $tmpdir/$image.gpg.b64)" https://file.io/?expires=2d | jq -r ".key")
+    if [ $? -eq 127 ]
+    then
+        >&2 echo "ERROR: jq not in your PATH. Please install it"
+        exit 1
+    fi
+    echo "Key: $key"
+
+    # Copying the key
+    if [ -n "$DISPLAY" ]
+    then
+        echo -n "$key" | xclip -sel clip
+        echo -n ""
+        result=$?
+        if [ $result -eq 0 ]
+        then
+            notify-send "$0" "Key copied in your clipboard!" || true
+        elif [ $result -eq 127 ]
+        then
+            >&2 echo "WARNING: xclip not in your PATH, key not copied into clipboard"
+            notify-send "Key not copied into clipboard" || true
+        fi
+    fi
+
+    # Shred the files
+    shred --remove "$tmpdir/$image.gpg"
+    result=$?
+    if [ $result -eq 0 ]
+    then
+        shred --remove "$tmpdir/$image.gpg.b64"
+    elif [ $result -eq 127 ]
+    then
+        >&2 echo "WARNING: shred not in your PATH, message files not deleted"
+    fi   
+    exit
 fi
 
 # Write the message

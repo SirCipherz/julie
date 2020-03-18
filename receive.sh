@@ -32,6 +32,12 @@ OPTIONS:
             fi
             shift
             ;;
+        -i|--image)
+            shift
+            mode='img'
+            key="$1"
+            shift
+            ;;
         -e|--editor)
             shift
             if [ $# -gt 0 ]
@@ -62,6 +68,38 @@ then
         $editor "$tmpdir/key"
         key=$(cat "$tmpdir/key")
     fi
+fi
+
+if [ $mode == 'img' ]; then
+    # Download
+    curl --silent "https://file.io/$key" --output "$tmpdir/image.gpg.b64"
+    
+    cat "$tmpdir/image.gpg.b64" | base64 -d > "$tmpdir/image.gpg"
+    if [ $? -eq 127 ]
+    then
+        >&2 echo "ERROR: base64 not in your PATH, please install it"
+        exit 1
+    fi
+
+    # Decrypt and show the message from GPG
+    gpg --decrypt "$tmpdir/image.gpg" 2> /dev/null | ffplay -v quiet -
+    if [ $? -eq 127 ]
+    then
+        >&2 echo "ERROR: gpg not in your PATH, please install it"
+        exit 1
+    fi
+
+    # Shred the files
+    result=$?
+    if [ $result -eq 0 ]
+    then
+        shred --remove "$tmpdir/imge.gpg"
+        shred --remove "$tmpdir/image.gpg.b64"
+    elif [ $result -eq 127 ]
+    then
+        >&2 echo "WARNING: shred not in your PATH, message files not deleted"
+    fi
+    exit
 fi
 
 # Download the message
