@@ -70,7 +70,7 @@ then
 fi
 
 # Image mode
-if [ $mode == 'img' ]
+if [ "$mode" == 'img' ]
 then
     # Encrypt
     cat "$img_path" | gpg -se "${recipients[*]}" > "$tmpdir/$image.gpg"

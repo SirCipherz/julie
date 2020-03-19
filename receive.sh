@@ -70,7 +70,7 @@ then
     fi
 fi
 
-if [ $mode == 'img' ]; then
+if [ "$mode" == "img" ]; then
     # Download
     curl --silent "https://file.io/$key" --output "$tmpdir/image.gpg.b64"
     
