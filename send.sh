@@ -1,4 +1,12 @@
 #!/bin/bash
+
+printfn() {
+ str=$1
+ num=$2
+ v=$(printf "%-${num}s" "$str")
+ echo "${v// /_}"
+}
+
 # Set the temp directory
 tmpdir="/tmp"
 if [ -n "$TMPDIR" ]
@@ -104,7 +112,7 @@ then
         >&2 echo "WARNING: shred not in your PATH, message files not deleted"
     fi   
 
-    # Wraping into another file
+    printfn "_" `tput cols`
     echo "Key: $key"
 
     # Copy the key into the clipboard
@@ -177,6 +185,7 @@ then
     >&2 echo "WARNING: shred not in your PATH, message files not deleted"
 fi
 
+printfn "_" `tput cols`
 echo "Key: $key"
 
 # Copy the key into the clipboard

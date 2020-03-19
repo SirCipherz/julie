@@ -1,5 +1,12 @@
 #!/bin/bash
 
+printfn() {
+ str=$1
+ num=$2
+ v=$(printf "%-${num}s" "$str")
+ echo "${v// /_}"
+}
+
 tmpdir="/tmp"
 if [ -n "$TMPDIR" ]
 then
@@ -110,6 +117,7 @@ then
     exit 1
 fi
 
+printfn "_" `tput cols`
 # Decrypt and show the message from GPG
 gpg --decrypt "$tmpdir/message.gpg" 2> /dev/null
 if [ $? -eq 127 ]
