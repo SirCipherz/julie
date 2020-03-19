@@ -8,6 +8,7 @@ fi
 
 # Set the editor
 editor='vim'
+expiracy='1d'
 
 # Set the recipients
 recipients=()
@@ -21,11 +22,12 @@ do
     $0 [options] [message]
 
 OPTIONS:
-    -h --help           Displays this help menu and exit
-    -e --editor         Set the editor (available values: zenity, read, vim, or anything else. 
-                                        default value: if \$DISPLAY exists, zenity, else if \$EDITOR is set, \$EDITOR, else read)
-    -r --recipient      encrypt for USER-ID (GPG)\n
-    -i --image <path>   To send an image"
+    -h --help             Displays this help menu and exit
+    -e --editor           Set the editor (available values: zenity, read, vim, or anything else. 
+                                          default value: if \$DISPLAY exists, zenity, else if \$EDITOR is set, \$EDITOR, else read)
+    -r --recipient        encrypt for USER-ID (GPG)\n
+    -i --image <path>     To send an image\n
+    -E --expiracy <exp>   Change the expiracy of the message"
             exit
             ;;
         -e|--editor)
@@ -47,6 +49,11 @@ OPTIONS:
             else
                 >&2 echo "ERROR: Please specify a recipient"
             fi
+            shift
+            ;;
+        -E|--expiracy)
+            shift
+            expiracy="$1"
             shift
             ;;
         -i|--image)
@@ -82,7 +89,9 @@ then
         exit 1
     fi
     # Upload
-    link=$(curl --silent -F "file=@$tmpdir/$image.gpg.b64" https://file.io/?expires=1d | jq -r ".key")
+    json=$(curl --silent -F "file=@$tmpdir/$image.gpg.b64" https://file.io/?expires=$expiracy)
+    link=$(echo $json | jq -r ".key")
+    expiracy=$(echo $json | jq -r ".expiry")
     if [ $? -eq 127 ]
     then
         >&2 echo "ERROR: jq not in your PATH. Please install it"
@@ -102,8 +111,9 @@ then
 
     # Wraping into another file
     content='img'$link
-    key=$(curl --silent --data-urlencode "text=$content" https://file.io/?expires=1d | jq -r ".key")   
+    key=$(curl --silent --data-urlencode "text=$content" https://file.io/?expires=$expiracy | jq -r ".key")   
 
+    echo "The message will expire in : $expiracy"
     echo "Key: $key"
 
     # Copy the key into the clipboard
@@ -161,7 +171,7 @@ then
 fi
 
 # Upload
-link=$(curl --silent --data-urlencode "text=$(cat $tmpdir/message.gpg.b64)" https://file.io/?expires=1d | jq -r ".key")
+link=$(curl --silent --data-urlencode "text=$(cat $tmpdir/message.gpg.b64)" https://file.io/?expires=$expiracy | jq -r ".key")
 if [ $? -eq 127 ]
 then
     >&2 echo "ERROR: jq not in your PATH. Please install it"
@@ -181,7 +191,7 @@ then
 fi
 # Wraping into another file
 content='txt'$link
-key=$(curl --silent --data-urlencode "text=$content" https://file.io/?expires=1d | jq -r ".key")
+key=$(curl --silent --data-urlencode "text=$content" https://file.io/?expires=$expiracy | jq -r ".key")
 
 echo "Key: $key"
 
