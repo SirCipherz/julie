@@ -9,6 +9,7 @@ fi
 # Set the editor
 editor='vim'
 expiracy='1d'
+server='julie.sircipherz.com'
 
 # Set the recipients
 recipients=()
@@ -89,14 +90,8 @@ then
         exit 1
     fi
     # Upload
-    json=$(curl --silent -F "file=@$tmpdir/$image.gpg.b64" https://file.io/?expires=$expiracy)
-    link=$(echo $json | jq -r ".key")
-    expiracy=$(echo $json | jq -r ".expiry")
-    if [ $? -eq 127 ]
-    then
-        >&2 echo "ERROR: jq not in your PATH. Please install it"
-        exit 1
-    fi
+    key=`ssh julie@$server "bash new img"`
+    scp $tmpdir/$image.gpg.b64 julie@$server:~/files/$key/content
 
     # Shred the files
     shred --remove "$tmpdir/$image.gpg"
@@ -110,10 +105,6 @@ then
     fi   
 
     # Wraping into another file
-    content='img'$link
-    key=$(curl --silent --data-urlencode "text=$content" https://file.io/?expires=$expiracy | jq -r ".key")   
-
-    echo "The message will expire in : $expiracy"
     echo "Key: $key"
 
     # Copy the key into the clipboard
@@ -171,12 +162,8 @@ then
 fi
 
 # Upload
-link=$(curl --silent --data-urlencode "text=$(cat $tmpdir/message.gpg.b64)" https://file.io/?expires=$expiracy | jq -r ".key")
-if [ $? -eq 127 ]
-then
-    >&2 echo "ERROR: jq not in your PATH. Please install it"
-    exit 1
-fi
+key=`ssh julie@$server "bash new txt"`
+scp $tmpdir/message.gpg.b64 julie@$server:~/files/$key/content
 
 # Shred the files
 shred --remove "$tmpdir/message"
@@ -189,9 +176,6 @@ elif [ $result -eq 127 ]
 then
     >&2 echo "WARNING: shred not in your PATH, message files not deleted"
 fi
-# Wraping into another file
-content='txt'$link
-key=$(curl --silent --data-urlencode "text=$content" https://file.io/?expires=$expiracy | jq -r ".key")
 
 echo "Key: $key"
 

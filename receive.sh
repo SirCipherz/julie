@@ -7,6 +7,7 @@ then
 fi
 
 editor="read"
+server="julie.sircipherz.com"
 
 while [ $# -gt 0 ]
 do
@@ -64,19 +65,11 @@ then
     fi
 fi
 
-# Download the wrapper
-wrapper=$(curl --silent "https://file.io/$key")
-
-if [ ${wrapper:0:3} == "img" ]
-then
-    mode="img"
-fi
-
-key=${wrapper:3:${#wrapper}}
+mode=`ssh julie@$server "cat ~/files/$key/type"`
 
 if [ "$mode" == "img" ]; then
     # Download
-    curl --silent "https://file.io/$key" --output "$tmpdir/image.gpg.b64"
+    scp julie@$server:~/files/$key/content $tmpdir/image.gpg.b64
     
     cat "$tmpdir/image.gpg.b64" | base64 -d > "$tmpdir/image.gpg"
     if [ $? -eq 127 ]
@@ -107,7 +100,7 @@ if [ "$mode" == "img" ]; then
 fi
 
 # Download the message
-curl --silent "https://file.io/$key" --output "$tmpdir/message.gpg.b64"
+scp julie@$server:~/files/$key/content $tmpdir/message.gpg.b64
 
 # Decrypt the message from base64
 cat "$tmpdir/message.gpg.b64" | base64 -d > "$tmpdir/message.gpg"
