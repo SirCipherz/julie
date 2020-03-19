@@ -82,7 +82,7 @@ then
         exit 1
     fi
     # Upload
-    link=$(curl --silent -F "file=@$tmpdir/$image.gpg.b64" https://file.io/?expires=2d | jq -r ".key")
+    link=$(curl --silent -F "file=@$tmpdir/$image.gpg.b64" https://file.io/?expires=1d | jq -r ".key")
     if [ $? -eq 127 ]
     then
         >&2 echo "ERROR: jq not in your PATH. Please install it"
@@ -102,7 +102,7 @@ then
 
     # Wraping into another file
     content='img'$link
-    key=$(curl --silent --data-urlencode "text=$content" https://file.io/?expires=2d | jq -r ".key")   
+    key=$(curl --silent --data-urlencode "text=$content" https://file.io/?expires=1d | jq -r ".key")   
 
     echo "Key: $key"
 
@@ -161,7 +161,7 @@ then
 fi
 
 # Upload
-link=$(curl --silent --data-urlencode "text=$(cat $tmpdir/message.gpg.b64)" https://file.io/?expires=2d | jq -r ".key")
+link=$(curl --silent --data-urlencode "text=$(cat $tmpdir/message.gpg.b64)" https://file.io/?expires=1d | jq -r ".key")
 if [ $? -eq 127 ]
 then
     >&2 echo "ERROR: jq not in your PATH. Please install it"
@@ -181,7 +181,7 @@ then
 fi
 # Wraping into another file
 content='txt'$link
-key=$(curl --silent --data-urlencode "text=$content" https://file.io/?expires=2d | jq -r ".key")   
+key=$(curl --silent --data-urlencode "text=$content" https://file.io/?expires=1d | jq -r ".key")
 
 echo "Key: $key"
 
