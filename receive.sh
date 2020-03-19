@@ -32,12 +32,6 @@ OPTIONS:
             fi
             shift
             ;;
-        -i|--image)
-            shift
-            mode='img'
-            key="$1"
-            shift
-            ;;
         -e|--editor)
             shift
             if [ $# -gt 0 ]
@@ -70,6 +64,16 @@ then
     fi
 fi
 
+# Download the wrapper
+wrapper=$(curl --silent "https://file.io/$key")
+
+if [ ${wrapper:0:3} == "img" ]
+then
+    mode="img"
+fi
+
+key=${wrapper:3:${#wrapper}}
+
 if [ "$mode" == "img" ]; then
     # Download
     curl --silent "https://file.io/$key" --output "$tmpdir/image.gpg.b64"
@@ -93,7 +97,7 @@ if [ "$mode" == "img" ]; then
     result=$?
     if [ $result -eq 0 ]
     then
-        shred --remove "$tmpdir/imge.gpg"
+        shred --remove "$tmpdir/image.gpg"
         shred --remove "$tmpdir/image.gpg.b64"
     elif [ $result -eq 127 ]
     then

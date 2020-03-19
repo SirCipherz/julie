@@ -46,7 +46,6 @@ sudo ./install.sh
 -t       : Change the tmp dir
 -e       : Override the editor
 -h       : Shows help
--i <key> : Receive an image
 ```
 ## How much secure is Julie ?
 

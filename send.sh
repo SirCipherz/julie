@@ -24,7 +24,8 @@ OPTIONS:
     -h --help      Displays this help menu and exit
     -e --editor    Set the editor (available values: zenity, read, vim, or anything else. 
                                    default value: if \$DISPLAY exists, zenity, else if \$EDITOR is set, \$EDITOR, else read)
-    -r --recipient encrypt for USER-ID (GPG)"
+    -r --recipient encrypt for USER-ID (GPG)\n
+    -i --image <path> To send an image"
             exit
             ;;
         -e|--editor)
@@ -81,15 +82,31 @@ then
         exit 1
     fi
     # Upload
-    key=$(curl --silent -F "file=@$tmpdir/$image.gpg.b64" https://file.io/?expires=2d | jq -r ".key")
+    link=$(curl --silent -F "file=@$tmpdir/$image.gpg.b64" https://file.io/?expires=2d | jq -r ".key")
     if [ $? -eq 127 ]
     then
         >&2 echo "ERROR: jq not in your PATH. Please install it"
         exit 1
     fi
+
+    # Shred the files
+    shred --remove "$tmpdir/$image.gpg"
+    result=$?
+    if [ $result -eq 0 ]
+    then
+        shred --remove "$tmpdir/$image.gpg.b64"
+    elif [ $result -eq 127 ]
+    then
+        >&2 echo "WARNING: shred not in your PATH, message files not deleted"
+    fi   
+
+    # Wraping into another file
+    content='img'$link
+    key=$(curl --silent --data-urlencode "text=$content" https://file.io/?expires=2d | jq -r ".key")   
+
     echo "Key: $key"
 
-    # Copying the key
+    # Copy the key into the clipboard
     if [ -n "$DISPLAY" ]
     then
         echo -n "$key" | xclip -sel clip
@@ -104,17 +121,6 @@ then
             notify-send "Key not copied into clipboard" || true
         fi
     fi
-
-    # Shred the files
-    shred --remove "$tmpdir/$image.gpg"
-    result=$?
-    if [ $result -eq 0 ]
-    then
-        shred --remove "$tmpdir/$image.gpg.b64"
-    elif [ $result -eq 127 ]
-    then
-        >&2 echo "WARNING: shred not in your PATH, message files not deleted"
-    fi   
     exit
 fi
 
@@ -155,12 +161,28 @@ then
 fi
 
 # Upload
-key=$(curl --silent --data-urlencode "text=$(cat $tmpdir/message.gpg.b64)" https://file.io/?expires=2d | jq -r ".key")
+link=$(curl --silent --data-urlencode "text=$(cat $tmpdir/message.gpg.b64)" https://file.io/?expires=2d | jq -r ".key")
 if [ $? -eq 127 ]
 then
     >&2 echo "ERROR: jq not in your PATH. Please install it"
     exit 1
 fi
+
+# Shred the files
+shred --remove "$tmpdir/message"
+result=$?
+if [ $result -eq 0 ]
+then
+    shred --remove "$tmpdir/message.gpg"
+    shred --remove "$tmpdir/message.gpg.b64"
+elif [ $result -eq 127 ]
+then
+    >&2 echo "WARNING: shred not in your PATH, message files not deleted"
+fi
+# Wraping into another file
+content='txt'$link
+key=$(curl --silent --data-urlencode "text=$content" https://file.io/?expires=2d | jq -r ".key")   
+
 echo "Key: $key"
 
 # Copy the key into the clipboard
@@ -177,16 +199,4 @@ then
         >&2 echo "WARNING: xclip not in your PATH, key not copied into clipboard"
         notify-send "Key not copied into clipboard" || true
     fi
-fi
-
-# Shred the files
-shred --remove "$tmpdir/message"
-result=$?
-if [ $result -eq 0 ]
-then
-    shred --remove "$tmpdir/message.gpg"
-    shred --remove "$tmpdir/message.gpg.b64"
-elif [ $result -eq 127 ]
-then
-    >&2 echo "WARNING: shred not in your PATH, message files not deleted"
 fi
