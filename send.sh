@@ -21,11 +21,11 @@ do
     $0 [options] [message]
 
 OPTIONS:
-    -h --help      Displays this help menu and exit
-    -e --editor    Set the editor (available values: zenity, read, vim, or anything else. 
-                                   default value: if \$DISPLAY exists, zenity, else if \$EDITOR is set, \$EDITOR, else read)
-    -r --recipient encrypt for USER-ID (GPG)\n
-    -i --image <path> To send an image"
+    -h --help           Displays this help menu and exit
+    -e --editor         Set the editor (available values: zenity, read, vim, or anything else. 
+                                        default value: if \$DISPLAY exists, zenity, else if \$EDITOR is set, \$EDITOR, else read)
+    -r --recipient      encrypt for USER-ID (GPG)\n
+    -i --image <path>   To send an image"
             exit
             ;;
         -e|--editor)
