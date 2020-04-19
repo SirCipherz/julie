@@ -65,7 +65,7 @@ then
 fi
 
 # Download the wrapper
-wrapper=$(curl --silent "https://file.io/$key")
+wrapper=$(torsocks curl --silent "https://file.io/$key")
 
 if [ ${wrapper:0:3} == "img" ]
 then
@@ -76,7 +76,7 @@ key=${wrapper:3:${#wrapper}}
 
 if [ "$mode" == "img" ]; then
     # Download
-    curl --silent "https://file.io/$key" --output "$tmpdir/image.gpg.b64"
+    torsocks curl --silent "https://file.io/$key" --output "$tmpdir/image.gpg.b64"
     
     cat "$tmpdir/image.gpg.b64" | base64 -d > "$tmpdir/image.gpg"
     if [ $? -eq 127 ]
@@ -107,7 +107,7 @@ if [ "$mode" == "img" ]; then
 fi
 
 # Download the message
-curl --silent "https://file.io/$key" --output "$tmpdir/message.gpg.b64"
+torsocks curl --silent "https://file.io/$key" --output "$tmpdir/message.gpg.b64"
 
 # Decrypt the message from base64
 cat "$tmpdir/message.gpg.b64" | base64 -d > "$tmpdir/message.gpg"
