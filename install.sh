@@ -29,7 +29,7 @@ else
         editor='read'
     fi
 
-    python3 replacer.py $editor # Changing the editor into the send.sh file
+    sed "s/editor='vim'/editor='$editor'/g" ./send.sh > /tmp/tmp-julie-send.sh # Replacing the default editor (vim) with the one choosed by the user
 
     # Copy the send and the receive script into /usr/bin/
     echo "Copying the files ..."
