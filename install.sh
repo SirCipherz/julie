@@ -9,7 +9,7 @@ else
     echo "Welcome to the Julie's installation wizard"
     echo ""
     echo "Which editor would you like to use ?"
-    echo "(N)ano | (V)im | (C)ustom julie's GUI | (R)ead [crappy cli]"
+    echo "(N)ano | (V)im | (Z)enity | (R)ead"
     read -p "$ " editor
 
     if [[ $editor == 'N' ]] || [[  $editor == 'n' ]]; then
@@ -18,15 +18,15 @@ else
     elif [[ $editor == 'V' ]] || [[ $editor == 'v' ]]; then
         editor='vim'
         echo "vim will be used as your editor for julie"
-    elif [[ $editor == 'C' ]] || [[ $editor == 'c' ]]; then
+    elif [[ $editor == 'Z' ]] || [[ $editor == 'z' ]]; then
         editor='zenity'
         echo "zenity will be used as your editor for julie"
     elif [[ $editor == 'R' ]] || [[ $editor == 'r' ]]; then
         editor='read'
         echo "read will be used as your editor for julie"
     else
-        echo "You haven't choose a valid editor, the custom one will be used"
-        editor='zenity'
+        echo "You haven't choose a valid editor, the read will be used"
+        editor='read'
     fi
 
     python3 replacer.py $editor # Changing the editor into the send.sh file
