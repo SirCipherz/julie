@@ -82,7 +82,7 @@ then
         exit 1
     fi
     # Upload
-    link=$(torsocks curl --silent -F "file=@$tmpdir/$image.gpg.b64" https://file.io/?expires=2d | jq -r ".key")
+    link=$(curl --silent -F "file=@$tmpdir/$image.gpg.b64" https://file.io/?expires=2d | jq -r ".key")
     if [ $? -eq 127 ]
     then
         >&2 echo "ERROR: jq not in your PATH. Please install it"
@@ -102,7 +102,7 @@ then
 
     # Wraping into another file
     content='img'$link
-    key=$(torsocks curl --silent --data-urlencode "text=$content" https://file.io/?expires=2d | jq -r ".key")   
+    key=$(curl --silent --data-urlencode "text=$content" https://file.io/?expires=2d | jq -r ".key")
 
     echo "Key: $key"
 
@@ -181,7 +181,7 @@ then
 fi
 # Wraping into another file
 content='txt'$link
-key=$(torsocks curl --silent --data-urlencode "text=$content" https://file.io/?expires=2d | jq -r ".key")   
+key=$(curl --silent --data-urlencode "text=$content" https://file.io/?expires=2d | jq -r ".key")
 
 echo "Key: $key"
 
